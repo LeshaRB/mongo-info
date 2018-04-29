@@ -5,9 +5,14 @@ ext {
 apply plugin: "java"
 
 sourceSets {
+  generatedDir {
+    java {
+      srcDirs = ["$generatedDir/main", "$generatedDir/test"]
+    }
+  }
   main {
     java {
-      srcDirs = ["$generatedDir/main", "src/main/java"]
+      srcDirs = ["src/main/java"]
     }
     resources {
       srcDirs = ["src/main/resources"]
@@ -15,7 +20,7 @@ sourceSets {
   }
   test {
     java {
-      srcDirs = ["$generatedDir/test", "src/test/java"]
+      srcDirs = ["src/test/java"]
     }
     resources {
       srcDirs = ["src/test/resources"]

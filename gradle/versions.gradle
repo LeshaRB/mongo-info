@@ -5,6 +5,18 @@ ext {
   // Lombok
   lombokVersion = "1.16.20"
 
+  // Other
+  autoValueVersion = "1.6"
+  jacksonVersion = "2.9.5"
+  jsr305Version = "3.0.2"
+  guavaVersion = "25.0-jre"
+
+  // Log
+  slf4jVersion = "1.7.25"
+
+  // Spring
+  springDataMongodbVersion = "2.0.6.RELEASE"
+
   // Test
   junitVersion = "4.12"
 }

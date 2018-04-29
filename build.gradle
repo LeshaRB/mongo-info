@@ -1,12 +1,15 @@
 plugins {
+//  id "org.springframework.boot" version "2.0.1.RELEASE"
   id "net.ltgt.apt" version "0.15"
 }
 
-group "by.mongo.utils"
+group "by.config.utils"
 version "1.0-SNAPSHOT"
 
 apply from: "$rootDir/gradle/idea.gradle"
 apply from: "$rootDir/gradle/versions.gradle"
+
+//apply plugin: "io.spring.dependency-management"
 
 allprojects {
   repositories {
@@ -23,7 +26,11 @@ allprojects {
   apply plugin: "net.ltgt.apt"
   apply plugin: "net.ltgt.apt-idea"
 
-  dependencies{
+  dependencies {
+    // Slf4j
+    compileOnly("org.slf4j:slf4j-api:$slf4jVersion")
+//    compile("org.slf4j:slf4j-simple:$slf4jVersion")
+
     // Lombok
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
@@ -48,8 +55,12 @@ subprojects {
       findbugsTest.enabled = false
       pmdMain.enabled = false
       pmdTest.enabled = false
-      test.enabled = false
+//      test.enabled = false
     }
+  }
+
+  clean.doLast {
+    new File("${projectDir}/out").deleteDir()
   }
 }
 

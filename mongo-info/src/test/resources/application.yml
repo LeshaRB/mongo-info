@@ -1,0 +1,7 @@
+#mongodb settings
+mongo:
+  database:
+     name: admin
+     urls: 127.0.0.1:27017
+     user: admin
+     password: admin
