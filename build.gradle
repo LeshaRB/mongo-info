@@ -1,0 +1,58 @@
+plugins {
+  id "net.ltgt.apt" version "0.15"
+}
+
+group "by.mongo.utils"
+version "1.0-SNAPSHOT"
+
+apply from: "$rootDir/gradle/idea.gradle"
+apply from: "$rootDir/gradle/versions.gradle"
+
+allprojects {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+      url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+  }
+
+  apply from: "$rootDir/gradle/java.gradle"
+  apply from: "$rootDir/gradle/codeQuality.gradle"
+
+  apply plugin: "net.ltgt.apt"
+  apply plugin: "net.ltgt.apt-idea"
+
+  dependencies{
+    // Lombok
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+
+    // Test
+    testCompile("junit:junit:$junitVersion")
+
+    testCompile("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+  }
+}
+
+subprojects {
+  task fastRun(dependsOn: [clean, build]) {
+  }
+
+  gradle.taskGraph.whenReady {
+    if (gradle.taskGraph.hasTask(":${project.name}:fastRun")) {
+      checkstyleMain.enabled = false
+      checkstyleTest.enabled = false
+      findbugsMain.enabled = false
+      findbugsTest.enabled = false
+      pmdMain.enabled = false
+      pmdTest.enabled = false
+      test.enabled = false
+    }
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "$gradleVersion"
+}

@@ -1,0 +1,10 @@
+ext {
+  // Gradle build
+  gradleVersion = "4.7"
+
+  // Lombok
+  lombokVersion = "1.16.20"
+
+  // Test
+  junitVersion = "4.12"
+}
