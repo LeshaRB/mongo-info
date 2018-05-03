@@ -11,7 +11,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
@@ -186,7 +185,7 @@ public class MongoInfo {
           buildInfoResult.getString("loaderFlags"),
           buildInfoResult.getString("compilerFlags"),
           buildInfoResult.getString("allocator"),
-          buildInfoResult.get("versionArray", ArrayList.class),
+          (List<Integer>) buildInfoResult.get("versionArray", List.class),
           buildInfoResult.getString("javascriptEngine"),
           buildInfoResult.getInteger("bits"),
           buildInfoResult.getBoolean("debug"),

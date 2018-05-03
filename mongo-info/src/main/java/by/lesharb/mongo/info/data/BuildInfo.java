@@ -12,20 +12,31 @@ import javax.annotation.Nullable;
  */
 @AutoValue
 public abstract class BuildInfo {
+
   public abstract String version();
+
   public abstract String gitVersion();
+
   public abstract String sysInfo();
+
   @Nullable
   public abstract String loaderFlags();
+
   @Nullable
   public abstract String compilerFlags();
+
   @Nullable
   public abstract String allocator();
+
   public abstract List<Integer> versionArray();
+
   @Nullable
   public abstract String javascriptEngine();
+
   public abstract int bits();
+
   public abstract boolean debug();
+
   public abstract int maxBsonObjectSize();
 
   public static BuildInfo create(String version,
