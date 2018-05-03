@@ -10,11 +10,13 @@ ext {
   jacksonVersion = "2.9.5"
   jsr305Version = "3.0.2"
   guavaVersion = "25.0-jre"
+  mongoJavaDriverVersion = "3.6.3"
 
   // Log
   slf4jVersion = "1.7.25"
 
   // Spring
+  springVersion = "5.0.5.RELEASE"
   springDataMongodbVersion = "2.0.6.RELEASE"
 
   // Test

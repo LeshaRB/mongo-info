@@ -1,0 +1,9 @@
+group 'by.config.utils'
+version '1.0-SNAPSHOT'
+
+dependencies {
+  // Spring
+//  compileOnly("org.springframework:spring-core:$springVersion")
+  // Test
+  //testCompile("org.springframework.boot:spring-boot-starter-test")
+}

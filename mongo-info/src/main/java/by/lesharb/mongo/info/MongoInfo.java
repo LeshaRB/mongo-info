@@ -8,6 +8,7 @@ import by.lesharb.mongo.info.data.ServerStatus;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -25,13 +26,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Slf4j
 public class MongoInfo {
 
-  public MongoStats mongoStats(MongoTemplate mongoTemplate) {
-    final List<ServerAddress> serverAddresses = new ArrayList<>();
-    //            mongoClient.getServerAddressList();
+  public MongoStats mongoStats(MongoTemplate mongoTemplate, MongoClient mongoClient) {
+    final List<ServerAddress> serverAddresses = mongoClient.getServerAddressList();
     final List<HostAndPort> servers = Lists.newArrayListWithCapacity(serverAddresses.size());
-    //    for (ServerAddress serverAddress : serverAddresses) {
-    //      servers.add(HostAndPort.fromParts(serverAddress.getHost(), serverAddress.getPort()));
-    //    }
+    for (ServerAddress serverAddress : serverAddresses) {
+      servers.add(HostAndPort.fromParts(serverAddress.getHost(), serverAddress.getPort()));
+    }
     final DatabaseStats dbStats;
     final Document dbStatsResult = mongoTemplate.executeCommand(new Document("dbStats", 1));
     if (checkOk(dbStatsResult)) {

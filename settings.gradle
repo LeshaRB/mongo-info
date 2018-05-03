@@ -1,4 +1,5 @@
 rootProject.name = "mongo-utils"
 
-include 'mongo-info'
+include "mongo-info"
+include "mongo-test"
 

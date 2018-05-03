@@ -1,5 +1,4 @@
 plugins {
-//  id "org.springframework.boot" version "2.0.1.RELEASE"
   id "net.ltgt.apt" version "0.15"
 }
 
@@ -8,8 +7,6 @@ version "1.0-SNAPSHOT"
 
 apply from: "$rootDir/gradle/idea.gradle"
 apply from: "$rootDir/gradle/versions.gradle"
-
-//apply plugin: "io.spring.dependency-management"
 
 allprojects {
   repositories {
@@ -28,8 +25,14 @@ allprojects {
 
   dependencies {
     // Slf4j
-    compileOnly("org.slf4j:slf4j-api:$slf4jVersion")
-    //compile("org.slf4j:slf4j-simple:$slf4jVersion")
+    compile("org.slf4j:slf4j-api:$slf4jVersion")
+    compile("org.slf4j:slf4j-simple:$slf4jVersion")
+
+    // Other
+    compile("org.mongodb:mongo-java-driver:$mongoJavaDriverVersion")
+
+    // Spring
+    compile("org.springframework.data:spring-data-mongodb:$springDataMongodbVersion")
 
     // Lombok
     compileOnly("org.projectlombok:lombok:$lombokVersion")
@@ -37,7 +40,6 @@ allprojects {
 
     // Test
     testCompile("junit:junit:$junitVersion")
-
     testCompile("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
   }

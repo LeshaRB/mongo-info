@@ -1,11 +1,5 @@
-plugins {
-  id "org.springframework.boot" version "2.0.1.RELEASE"
-}
-
 group "by.config.utils"
 version "1.0-SNAPSHOT"
-
-apply plugin: "io.spring.dependency-management"
 
 dependencies {
   compileOnly("com.google.auto.value:auto-value:$autoValueVersion")
@@ -15,13 +9,7 @@ dependencies {
   compile("com.google.guava:guava:$guavaVersion")
   compileOnly("com.google.code.findbugs:jsr305:$jsr305Version")
 
-//  compileOnly("org.springframework.data:spring-data-mongodb:$springDataMongodbVersion")
-  compile("org.springframework.boot:spring-boot-starter-data-mongodb")
-//  annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
-
   // Test
-//  testCompile("com.google.auto.value:auto-value:$autoValueVersion")
-//  testCompile("com.google.auto.value:auto-value-annotations:$autoValueVersion")
-//  testAnnotationProcessor("com.google.auto.value:auto-value:$autoValueVersion")
-  testCompile("org.springframework.boot:spring-boot-starter-test")
+  testCompile project(":mongo-test")
+  testCompile("org.springframework:spring-test:$springVersion")
 }
