@@ -20,11 +20,11 @@ public abstract class ServerStatus {
 
   public abstract long pid();
 
-  public abstract int uptime();
+  public abstract double uptime();
 
-  public abstract long uptimeMillis();
+  public abstract double uptimeMillis();
 
-  public abstract int uptimeEstimate();
+  public abstract long uptimeEstimate();
 
   public abstract LocalDateTime localTime();
 
@@ -40,26 +40,16 @@ public abstract class ServerStatus {
       String version,
       String process,
       long pid,
-      int uptime,
-      long uptimeMillis,
-      int uptimeEstimate,
+      double uptime,
+      double uptimeMillis,
+      long uptimeEstimate,
       LocalDateTime localTime,
       Connections connections,
       Network network,
       Memory memory,
       StorageEngine storageEngine) {
-    return new AutoValue_ServerStatus(host,
-        version,
-        process,
-        pid,
-        uptime,
-        uptimeMillis,
-        uptimeEstimate,
-        localTime,
-        connections,
-        network,
-        memory,
-        storageEngine);
+    return new AutoValue_ServerStatus(host, version, process, pid, uptime, uptimeMillis, uptimeEstimate, localTime,
+        connections, network, memory, storageEngine);
   }
 
   @AutoValue
@@ -69,9 +59,11 @@ public abstract class ServerStatus {
 
     public abstract int available();
 
-    public abstract Long totalCreated();
+    public abstract int totalCreated();
 
-    public static Connections create(int current, int available, Long totalCreated) {
+    public static Connections create(int current,
+        int available,
+        int totalCreated) {
       return new AutoValue_ServerStatus_Connections(current, available, totalCreated);
     }
   }
@@ -79,13 +71,15 @@ public abstract class ServerStatus {
   @AutoValue
   public abstract static class Network {
 
-    public abstract int bytesIn();
+    public abstract long bytesIn();
 
-    public abstract int bytesOut();
+    public abstract long bytesOut();
 
-    public abstract int numRequests();
+    public abstract long numRequests();
 
-    public static Network create(int bytesIn, int bytesOut, int numRequests) {
+    public static Network create(long bytesIn,
+        long bytesOut,
+        long numRequests) {
       return new AutoValue_ServerStatus_Network(bytesIn, bytesOut, numRequests);
     }
   }

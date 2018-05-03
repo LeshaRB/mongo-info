@@ -13,6 +13,7 @@ dependencies {
   annotationProcessor("com.google.auto.value:auto-value:$autoValueVersion")
 
   compile("com.google.guava:guava:$guavaVersion")
+  compileOnly("com.google.code.findbugs:jsr305:$jsr305Version")
 
 //  compileOnly("org.springframework.data:spring-data-mongodb:$springDataMongodbVersion")
   compile("org.springframework.boot:spring-boot-starter-data-mongodb")

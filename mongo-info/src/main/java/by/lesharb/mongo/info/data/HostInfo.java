@@ -2,6 +2,7 @@ package by.lesharb.mongo.info.data;
 
 import com.google.auto.value.AutoValue;
 import java.time.LocalDateTime;
+import javax.annotation.Nullable;
 
 /**
  * HostInfo.
@@ -18,7 +19,9 @@ public abstract class HostInfo {
 
   public abstract Extra extra();
 
-  public static HostInfo create(System system, Os os, Extra extra) {
+  public static HostInfo create(System system,
+      Os os,
+      Extra extra) {
     return new AutoValue_HostInfo(system, os, extra);
   }
 
@@ -31,7 +34,7 @@ public abstract class HostInfo {
 
     public abstract int cpuAddrSize();
 
-    public abstract long memSizeMB();
+    public abstract int memSizeMB();
 
     public abstract int numCores();
 
@@ -42,16 +45,11 @@ public abstract class HostInfo {
     public static System create(LocalDateTime currentTime,
         String hostname,
         int cpuAddrSize,
-        long memSizeMB,
+        int memSizeMB,
         int numCores,
         String cpuArch,
         boolean numaEnabled) {
-      return new AutoValue_HostInfo_System(currentTime,
-          hostname,
-          cpuAddrSize,
-          memSizeMB,
-          numCores,
-          cpuArch,
+      return new AutoValue_HostInfo_System(currentTime, hostname, cpuAddrSize, memSizeMB, numCores, cpuArch,
           numaEnabled);
     }
   }
@@ -65,7 +63,9 @@ public abstract class HostInfo {
 
     public abstract String version();
 
-    public static Os create(String type, String name, String version) {
+    public static Os create(String type,
+        String name,
+        String version) {
       return new AutoValue_HostInfo_Os(type, name, version);
     }
   }
@@ -73,42 +73,41 @@ public abstract class HostInfo {
   @AutoValue
   public abstract static class Extra {
 
+    @Nullable
     public abstract String versionString();
 
+    @Nullable
     public abstract String libcVersion();
 
+    @Nullable
     public abstract String kernelVersion();
 
+    @Nullable
     public abstract String cpuFrequencyMHz();
 
+    @Nullable
     public abstract String cpuFeatures();
 
+    @Nullable
     public abstract String scheduler();
 
-    public abstract Long pageSize();
+    public abstract long pageSize();
 
-    public abstract Long numPages();
+    public abstract int numPages();
 
-    public abstract Long maxOpenFiles();
+    public abstract int maxOpenFiles();
 
-    public static Extra create(String versionString,
-        String libcVersion,
-        String kernelVersion,
-        String cpuFrequencyMHz,
-        String cpuFeatures,
-        String scheduler,
+    public static Extra create(@Nullable String versionString,
+        @Nullable String libcVersion,
+        @Nullable String kernelVersion,
+        @Nullable String cpuFrequencyMHz,
+        @Nullable String cpuFeatures,
+        @Nullable String scheduler,
         long pageSize,
-        Long numPages,
-        Long maxOpenFiles) {
-      return new AutoValue_HostInfo_Extra(versionString,
-          libcVersion,
-          kernelVersion,
-          cpuFrequencyMHz,
-          cpuFeatures,
-          scheduler,
-          pageSize,
-          numPages,
-          maxOpenFiles);
+        int numPages,
+        int maxOpenFiles) {
+      return new AutoValue_HostInfo_Extra(versionString, libcVersion, kernelVersion, cpuFrequencyMHz, cpuFeatures,
+          scheduler, pageSize, numPages, maxOpenFiles);
     }
   }
 }

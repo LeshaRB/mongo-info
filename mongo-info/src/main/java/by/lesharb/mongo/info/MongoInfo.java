@@ -65,8 +65,8 @@ public class MongoInfo {
           dbStatsResult.getInteger("numExtents"),
           dbStatsResult.getInteger("indexes"),
           dbStatsResult.getDouble("indexSize"),
-          dbStatsResult.containsKey("fileSize") ? dbStatsResult.getLong("fileSize") : null,
-          dbStatsResult.containsKey("nsSizeMB") ? dbStatsResult.getLong("nsSizeMB") : null,
+          dbStatsResult.containsKey("fileSize") ? dbStatsResult.getLong("fileSize") : -1L,
+          dbStatsResult.containsKey("nsSizeMB") ? dbStatsResult.getLong("nsSizeMB") : -1L,
           extentFreeList,
           dataFileVersion
       );
@@ -78,35 +78,35 @@ public class MongoInfo {
     final ServerStatus serverStatus;
     final Document serverStatusResult = mongoTemplate.executeCommand(new Document("serverStatus", 1));
     if (checkOk(serverStatusResult)) {
-      final BasicDBObject connectionsMap = (BasicDBObject) serverStatusResult.get("connections");
+      final Document connectionsMap = (Document) serverStatusResult.get("connections");
       final ServerStatus.Connections connections = ServerStatus.Connections.create(
-          connectionsMap.getInt("current"),
-          connectionsMap.getInt("available"),
-          connectionsMap.containsField("totalCreated") ? connectionsMap.getLong("totalCreated") : null
+          connectionsMap.getInteger("current"),
+          connectionsMap.getInteger("available"),
+          connectionsMap.containsKey("totalCreated") ? connectionsMap.getInteger("totalCreated") : -1
       );
-      final BasicDBObject networkMap = (BasicDBObject) serverStatusResult.get("network");
+      final Document networkMap = (Document) serverStatusResult.get("network");
       final ServerStatus.Network network = ServerStatus.Network.create(
-          networkMap.getInt("bytesIn"),
-          networkMap.getInt("bytesOut"),
-          networkMap.getInt("numRequests")
+          networkMap.getLong("bytesIn"),
+          networkMap.getLong("bytesOut"),
+          networkMap.getLong("numRequests")
       );
-      final BasicDBObject memoryMap = (BasicDBObject) serverStatusResult.get("mem");
+      final Document memoryMap = (Document) serverStatusResult.get("mem");
       final ServerStatus.Memory memory = ServerStatus.Memory.create(
-          memoryMap.getInt("bits"),
-          memoryMap.getInt("resident"),
-          memoryMap.getInt("virtual"),
+          memoryMap.getInteger("bits"),
+          memoryMap.getInteger("resident"),
+          memoryMap.getInteger("virtual"),
           memoryMap.getBoolean("supported"),
-          memoryMap.getInt("mapped"),
-          memoryMap.getInt("mappedWithJournal")
+          memoryMap.getInteger("mapped"),
+          memoryMap.getInteger("mappedWithJournal")
       );
-      final BasicDBObject storageEngineMap = (BasicDBObject) serverStatusResult.get("storageEngine");
+      final Document storageEngineMap = (Document) serverStatusResult.get("storageEngine");
       final ServerStatus.StorageEngine storageEngine;
       if (storageEngineMap == null) {
         storageEngine = ServerStatus.StorageEngine.DEFAULT;
       } else {
         storageEngine = ServerStatus.StorageEngine.create(storageEngineMap.getString("name"));
       }
-      final int uptime = serverStatusResult.getInteger("uptime", 0);
+      final double uptime = serverStatusResult.containsKey("uptime") ? serverStatusResult.getDouble("uptime") : 0;
       serverStatus = ServerStatus.create(
           serverStatusResult.getString("host"),
           serverStatusResult.getString("version"),
@@ -114,7 +114,7 @@ public class MongoInfo {
           serverStatusResult.containsKey("pid") ? serverStatusResult.getLong("pid") : 0,
           uptime,
           serverStatusResult.containsKey("uptimeMillis") ? serverStatusResult.getLong("uptimeMillis") : uptime * 1000L,
-          serverStatusResult.getInteger("uptimeEstimate"),
+          serverStatusResult.getLong("uptimeEstimate"),
           serverStatusResult.getDate("localTime")
               .toInstant()
               .atZone(ZoneId.systemDefault())
@@ -136,26 +136,26 @@ public class MongoInfo {
     final HostInfo hostInfo;
     final Document hostInfoResult = mongoTemplate.executeCommand(new Document("hostInfo", 1));
     if (checkOk(hostInfoResult)) {
-      final BasicDBObject systemMap = (BasicDBObject) hostInfoResult.get("system");
+      final Document systemMap = (Document) hostInfoResult.get("system");
       final HostInfo.System system = HostInfo.System.create(
           systemMap.getDate("currentTime")
               .toInstant()
               .atZone(ZoneId.systemDefault())
               .toLocalDateTime(),
           systemMap.getString("hostname"),
-          systemMap.getInt("cpuAddrSize"),
-          systemMap.getLong("memSizeMB"),
-          systemMap.getInt("numCores"),
+          systemMap.getInteger("cpuAddrSize"),
+          systemMap.getInteger("memSizeMB"),
+          systemMap.getInteger("numCores"),
           systemMap.getString("cpuArch"),
           systemMap.getBoolean("numaEnabled")
       );
-      final BasicDBObject osMap = (BasicDBObject) hostInfoResult.get("os");
+      final Document osMap = (Document) hostInfoResult.get("os");
       final HostInfo.Os os = HostInfo.Os.create(
           osMap.getString("type"),
           osMap.getString("name"),
           osMap.getString("version")
       );
-      final BasicDBObject extraMap = (BasicDBObject) hostInfoResult.get("extra");
+      final Document extraMap = (Document) hostInfoResult.get("extra");
       final HostInfo.Extra extra = HostInfo.Extra.create(
           extraMap.getString("versionString"),
           extraMap.getString("libcVersion"),
@@ -163,9 +163,9 @@ public class MongoInfo {
           extraMap.getString("cpuFrequencyMHz"),
           extraMap.getString("cpuFeatures"),
           extraMap.getString("scheduler"),
-          extraMap.getLong("pageSize", -1L),
-          extraMap.getLong("numPages", -1L),
-          extraMap.getLong("maxOpenFiles", -1L)
+          extraMap.containsKey("pageSize") ? extraMap.getLong("pageSize") : -1L,
+          extraMap.containsKey("numPages") ? extraMap.getInteger("numPages") : -1,
+          extraMap.containsKey("maxOpenFiles") ? extraMap.getInteger("maxOpenFiles") : -1
       );
       hostInfo = HostInfo.create(system, os, extra);
     } else {
@@ -186,11 +186,11 @@ public class MongoInfo {
           buildInfoResult.getString("loaderFlags"),
           buildInfoResult.getString("compilerFlags"),
           buildInfoResult.getString("allocator"),
-          buildInfoResult.get("versionArray", new List<Integer>().getClass()),
+          buildInfoResult.get("versionArray", ArrayList.class),
           buildInfoResult.getString("javascriptEngine"),
           buildInfoResult.getInteger("bits"),
           buildInfoResult.getBoolean("debug"),
-          buildInfoResult.getLong("maxBsonObjectSize")
+          buildInfoResult.getInteger("maxBsonObjectSize")
       );
     } else {
       log.debug("Couldn't retrieve MongoDB buildInfo: {}", getErrorMessage(buildInfoResult));
